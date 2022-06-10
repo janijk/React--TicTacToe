@@ -18,7 +18,7 @@ class Board extends React.Component {
         if (sqrNmbr === i) {
           classN = "square winner"
         }
-        return;
+        return null;
       })
     }
 
