@@ -14,10 +14,11 @@ class Board extends React.Component {
   renderSquare(i) {
     let classN = "square";
     if (this.props.winningLine) {
-      const n = this.props.winningLine[1].map((sqrNmbr) => {
+      this.props.winningLine[1].map((sqrNmbr) => {
         if (sqrNmbr === i) {
           classN = "square winner"
         }
+        return;
       })
     }
 
