@@ -53,3 +53,11 @@ ul {
 .button-moves {
   font-weight: bold;
 }
+
+.winner {
+  color: green;
+}
+
+.li-numberless {
+  list-style-type: none;
+}
