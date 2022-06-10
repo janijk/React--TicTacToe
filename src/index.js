@@ -3,16 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 
 function Square(props) {
-  let classN = "square";
-  if (props.winner) {
-    const n = props.winner[1].map((sqrNmbr) => {
-      if (sqrNmbr === props.squareNumber) {
-        classN = "square winner"
-      }
-    })
-  }
   return (
-    <button className={classN} onClick={props.onClick} >
+    <button className={props.classN} onClick={props.onClick} >
       {props.value}
     </button>
   );
@@ -20,17 +12,26 @@ function Square(props) {
 
 class Board extends React.Component {
   renderSquare(i) {
+    let classN = "square";
+    if (this.props.winningLine) {
+      const n = this.props.winningLine[1].map((sqrNmbr) => {
+        if (sqrNmbr === i) {
+          classN = "square winner"
+        }
+      })
+    }
+
     return (
       <Square
+        key={'key:' + i}
         value={this.props.squares[i]}
-        winner={this.props.winningLine}
-        squareNumber={i}
+        classN={classN}
         onClick={() => this.props.onClick(i)}
       />
     );
   }
 
-  renderGrid() {
+  render() {
     let grid = [];
     let squareNumber = 0;
     for (let i = 0; i < 3; i++) {
@@ -39,15 +40,12 @@ class Board extends React.Component {
         rows = rows.concat(this.renderSquare(squareNumber))
         squareNumber += 1
       }
-      grid = grid.concat(<div className='board-row'>{rows}</div>)
+      grid = grid.concat(<div key={'row:' + i} className='board-row'>{rows}</div>)
     }
-    return grid;
-  }
 
-  render() {
     return (
       <div>
-        {this.renderGrid()}
+        {grid}
       </div>
     );
   }
@@ -122,7 +120,10 @@ class Game extends React.Component {
     let status;
     if (winner) {
       status = 'Winner is: ' + winner[0];
-    } else {
+    } else if (this.state.stepNumber === 9) {
+      status = 'Game ended in draw ';
+    }
+    else {
       status = `Next player: ${this.state.xIsNext ? 'x' : 'o'}`;
     }
 
@@ -153,6 +154,7 @@ class Game extends React.Component {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
 
+// Check if there is a winning line
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
@@ -173,6 +175,7 @@ function calculateWinner(squares) {
   return null;
 }
 
+// Show the location of last move in move history list
 function choiceLocation(choice) {
   const choices = [
     [1, 1],
